@@ -15,12 +15,33 @@ class ChatScreenState extends State<ChatScreen> {
       new TextEditingController();
   final List<ChatMessage> _messages = <ChatMessage>[];
 
+  @override
+  void initState() {
+    super.initState();
+    ChatMessagesManager chatMessagesManager =
+        CubeChatConnection.instance.chatMessagesManager;
+    chatMessagesManager.chatMessagesStream.listen((message) {
+      print("Resive Message $message");
+    }).onError((handleError) {
+      print("Message Listener Error $handleError");
+    });
+  }
+
   void _handleSubmit(String text) {
     textEditingController.clear();
     ChatMessage chatMessage = new ChatMessage(text: text);
-    setState(() {
-      //used to rebuild our widget
-      _messages.insert(0, chatMessage);
+    CubeMessage message = CubeMessage();
+    message.body = text;
+    message.dateSent = DateTime.now().millisecondsSinceEpoch;
+    message.markable = true;
+    message.saveToHistory = true;
+    widget.cubeDialog.sendMessage(message).then((value) {
+      setState(() {
+        //used to rebuild our widget
+        _messages.insert(0, chatMessage);
+      });
+    }).catchError((onError) {
+      print("Message Send Error $onError");
     });
   }
 
