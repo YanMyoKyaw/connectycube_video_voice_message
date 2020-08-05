@@ -136,8 +136,7 @@ class _BodyLayoutState extends State<BodyLayout> {
                   ),
                   backgroundColor: Colors.purple,
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ChatScreen()));
+                    _startChat(_selectedUsers);
                   },
                 ),
               ],
@@ -207,6 +206,17 @@ class _BodyLayoutState extends State<BodyLayout> {
         _currentCall = null;
       }
     };
+  }
+
+  void _startChat(Set<int> opponents) {
+    List<int> oppoList;
+    opponents.map((e) => oppoList.add(e));
+    CubeDialog cubeDialog =
+        CubeDialog(CubeDialogType.PRIVATE, occupantsIds: oppoList);
+    createDialog(cubeDialog).then((value) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => ChatScreen(cubeDialog)));
+    }).catchError((onError) => print("Cannot create cube dialog"));
   }
 
   void _startCall(int callType, Set<int> opponents) {

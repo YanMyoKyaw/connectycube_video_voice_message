@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'ChatMessage.dart';
+import 'package:connectycube_sdk/connectycube_chat.dart';
 
 class ChatScreen extends StatefulWidget {
+  final CubeDialog cubeDialog;
+
+  ChatScreen(this.cubeDialog);
   @override
   State createState() => new ChatScreenState();
 }
@@ -51,7 +55,9 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Messager"),),
+      appBar: AppBar(
+        title: Text("Messager"),
+      ),
       body: Material(
         child: Column(
           children: <Widget>[
@@ -59,11 +65,13 @@ class ChatScreenState extends State<ChatScreen> {
               child: new ListView.builder(
                 padding: new EdgeInsets.all(8.0),
                 reverse: true,
-                itemBuilder:(_,int index)=>_messages[index],
-                itemCount: _messages.length, 
+                itemBuilder: (_, int index) => _messages[index],
+                itemCount: _messages.length,
               ),
             ),
-            new Divider(height: 1.0,),
+            new Divider(
+              height: 1.0,
+            ),
             new Container(
               decoration: new BoxDecoration(
                 color: Theme.of(context).cardColor,
