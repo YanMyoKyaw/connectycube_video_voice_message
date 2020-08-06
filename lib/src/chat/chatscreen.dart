@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'chatmessage.dart';
-import 'package:connectycube_sdk/connectycube_chat.dart';
+// import 'package:connectycube_sdk/connectycube_chat.dart';
+import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:p2p_call_sample/src/call_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final CubeDialog cubeDialog;
   final List<int> opponentId;
+  final P2PClient _callClient;
+  P2PSession _currentCall;
 
-  ChatScreen(this.cubeDialog, this.opponentId);
+  ChatScreen(
+      this.cubeDialog, this.opponentId, this._callClient, this._currentCall);
   @override
   State createState() => new ChatScreenState();
 }
@@ -73,6 +78,20 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  void _startCall(int callType, Set<int> opponents) {
+    if (opponents.isEmpty) return;
+
+    P2PSession callSession =
+        widget._callClient.createCallSession(callType, opponents);
+    widget._currentCall = callSession;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ConversationCallScreen(callSession, false),
+      ),
+    );
+  }
+
   void _handleSubmit(String text) {
     textEditingController.clear();
     ChatMessage chatMessage = new ChatMessage(
@@ -128,6 +147,26 @@ class ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Messager"),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.phone,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                _startCall(
+                    CallType.AUDIO_CALL, Set<int>.from(widget.opponentId));
+              }),
+          IconButton(
+              icon: Icon(
+                Icons.video_call,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                _startCall(
+                    CallType.VIDEO_CALL, Set<int>.from(widget.opponentId));
+              })
+        ],
       ),
       body: Material(
         child: Column(

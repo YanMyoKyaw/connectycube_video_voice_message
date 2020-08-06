@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 
-import 'select_opponents_screen.dart';
 import 'utils/configs.dart' as utils;
+import 'navigation/drawer.dart';
 
 class BodyLayout extends StatefulWidget {
   @override
@@ -120,26 +120,26 @@ class BodyState extends State<BodyLayout> {
     });
 
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Login Error"),
-            content: Text("Something went wrong during login to ConnectyCube"),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            ],
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Login Error"),
+          content: Text("Something went wrong during login to ConnectyCube"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          ],
+        );
+      });
   }
 
   void _goSelectOpponentsScreen(BuildContext context, CubeUser cubeUser) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SelectOpponentsScreen(),
+        builder: (context) => DrawerPage(),
       ),
     );
   }

@@ -59,7 +59,7 @@ class _BodyLayoutState extends State<BodyLayout> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ChatScreen(value, oppoList)));
+                        builder: (context) => ChatScreen(value, oppoList,_callClient,_currentCall)));
               }).catchError((onError) => print("Cannot create cube dialog"));
             }),
           ),
