@@ -55,6 +55,7 @@ class SelectOpponentsScreen extends StatelessWidget {
               onPressed: () {
                 signOut().then(
                   (voidValue) {
+                    CubeChatConnection.instance.logout();
                     CubeChatConnection.instance.destroy();
                     P2PClient.instance.destroy();
                     Navigator.pop(context); // cancel current Dialog
@@ -213,8 +214,8 @@ class _BodyLayoutState extends State<BodyLayout> {
     CubeDialog cubeDialog =
         CubeDialog(CubeDialogType.PRIVATE, occupantsIds: oppoList);
     createDialog(cubeDialog).then((value) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ChatScreen(value, oppoList)));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => ChatScreen(value, oppoList)));
     }).catchError((onError) => print("Cannot create cube dialog"));
   }
 

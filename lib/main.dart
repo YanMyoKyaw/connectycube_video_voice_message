@@ -28,6 +28,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    CubeSettings.instance.isDebugEnabled = false;
     init(
       config.APP_ID,
       config.AUTH_KEY,
