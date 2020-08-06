@@ -7,8 +7,7 @@ class ChatScreen extends StatefulWidget {
   final CubeDialog cubeDialog;
   final List<int> opponentId;
 
-  ChatScreen(
-      this.cubeDialog, this.opponentId);
+  ChatScreen(this.cubeDialog, this.opponentId);
   @override
   State createState() => new ChatScreenState();
 }
@@ -51,6 +50,7 @@ class ChatScreenState extends State<ChatScreen> {
           text: cubeMessage.body,
           isReceive: isReceive,
           isSend: isSend,
+          oppId: widget.opponentId[0],
         ));
       }
       setState(() {});
@@ -66,6 +66,7 @@ class ChatScreenState extends State<ChatScreen> {
         text: message.body,
         isReceive: true,
         isSend: false,
+        oppId: widget.opponentId[0],
       );
       setState(() {
         _messages.insert(0, chatMessage);
@@ -81,6 +82,7 @@ class ChatScreenState extends State<ChatScreen> {
       text: text,
       isReceive: false,
       isSend: true,
+      oppId: widget.opponentId[0],
     );
     CubeMessage message = CubeMessage();
     message.body = text;
