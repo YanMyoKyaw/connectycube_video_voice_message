@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'ChatMessage.dart';
+import 'chatmessage.dart';
 import 'package:connectycube_sdk/connectycube_chat.dart';
 
 class ChatScreen extends StatefulWidget {
   final CubeDialog cubeDialog;
+  final List<int> opponentId;
 
-  ChatScreen(this.cubeDialog);
+  ChatScreen(this.cubeDialog, this.opponentId);
   @override
   State createState() => new ChatScreenState();
 }
@@ -18,10 +19,55 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    _getMessages();
+    _receiveMessage();
+  }
+
+  //Get All Message
+  void _getMessages() {
+    GetMessagesParameters messagesParameters = GetMessagesParameters();
+    messagesParameters.limit = 100;
+    messagesParameters.filters = [
+      RequestFilter(
+          "", "date_sent", QueryRule.LT, DateTime.now().millisecondsSinceEpoch)
+    ];
+    messagesParameters.markAsRead = true;
+    messagesParameters.sorter = RequestSorter(OrderType.DESC, "", "date_sent");
+    getMessages(widget.cubeDialog.dialogId,
+            messagesParameters.getRequestParameters())
+        .then((pagedResult) {
+      List<CubeMessage> messageList = pagedResult.items;
+      for (int i = 0; i < messageList.length; i++) {
+        CubeMessage cubeMessage = messageList[i];
+        bool isSend = false, isReceive = false;
+        if (widget.opponentId.contains(cubeMessage.senderId)) {
+          isReceive = true;
+        } else {
+          isSend = true;
+        }
+        _messages.add(ChatMessage(
+          text: cubeMessage.body,
+          isReceive: isReceive,
+          isSend: isSend,
+        ));
+      }
+      setState(() {});
+    }).catchError((error) {});
+  }
+
+  // Receive message
+  void _receiveMessage() {
     ChatMessagesManager chatMessagesManager =
         CubeChatConnection.instance.chatMessagesManager;
     chatMessagesManager.chatMessagesStream.listen((message) {
-      print("Resive Message $message");
+      ChatMessage chatMessage = ChatMessage(
+        text: message.body,
+        isReceive: true,
+        isSend: false,
+      );
+      setState(() {
+        _messages.insert(0, chatMessage);
+      });
     }).onError((handleError) {
       print("Message Listener Error $handleError");
     });
@@ -29,7 +75,11 @@ class ChatScreenState extends State<ChatScreen> {
 
   void _handleSubmit(String text) {
     textEditingController.clear();
-    ChatMessage chatMessage = new ChatMessage(text: text);
+    ChatMessage chatMessage = new ChatMessage(
+      text: text,
+      isReceive: false,
+      isSend: true,
+    );
     CubeMessage message = CubeMessage();
     message.body = text;
     message.dateSent = DateTime.now().millisecondsSinceEpoch;

@@ -209,13 +209,12 @@ class _BodyLayoutState extends State<BodyLayout> {
   }
 
   void _startChat(Set<int> opponents) {
-    List<int> oppoList;
-    opponents.map((e) => oppoList.add(e));
+    List<int> oppoList = List.from(opponents);
     CubeDialog cubeDialog =
         CubeDialog(CubeDialogType.PRIVATE, occupantsIds: oppoList);
     createDialog(cubeDialog).then((value) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ChatScreen(cubeDialog)));
+          context, MaterialPageRoute(builder: (context) => ChatScreen(value, oppoList)));
     }).catchError((onError) => print("Cannot create cube dialog"));
   }
 
