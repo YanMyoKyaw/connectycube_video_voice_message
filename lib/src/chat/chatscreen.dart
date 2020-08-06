@@ -16,6 +16,7 @@ class ChatScreenState extends State<ChatScreen> {
   final TextEditingController textEditingController =
       new TextEditingController();
   final List<ChatMessage> _messages = <ChatMessage>[];
+  bool loading = false;
 
   @override
   void initState() {
@@ -26,6 +27,9 @@ class ChatScreenState extends State<ChatScreen> {
 
   //Get All Message
   void _getMessages() {
+    setState(() {
+      loading = true;
+    });
     GetMessagesParameters messagesParameters = GetMessagesParameters();
     messagesParameters.limit = 100;
     messagesParameters.filters = [
@@ -53,8 +57,13 @@ class ChatScreenState extends State<ChatScreen> {
           oppId: widget.opponentId[0],
         ));
       }
+      loading = false;
       setState(() {});
-    }).catchError((error) {});
+    }).catchError((error) {
+      setState(() {
+        loading = false;
+      });
+    });
   }
 
   // Receive message
@@ -129,26 +138,30 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        new Flexible(
-          child: new ListView.builder(
-            padding: new EdgeInsets.all(8.0),
-            reverse: true,
-            itemBuilder: (_, int index) => _messages[index],
-            itemCount: _messages.length,
-          ),
-        ),
-        new Divider(
-          height: 1.0,
-        ),
-        new Container(
-          decoration: new BoxDecoration(
-            color: Theme.of(context).cardColor,
-          ),
-          child: _textComposerWidget(),
-        )
-      ],
-    );
+    return loading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : Column(
+            children: <Widget>[
+              new Flexible(
+                child: new ListView.builder(
+                  padding: new EdgeInsets.all(8.0),
+                  reverse: true,
+                  itemBuilder: (_, int index) => _messages[index],
+                  itemCount: _messages.length,
+                ),
+              ),
+              new Divider(
+                height: 1.0,
+              ),
+              new Container(
+                decoration: new BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                ),
+                child: _textComposerWidget(),
+              )
+            ],
+          );
   }
 }
