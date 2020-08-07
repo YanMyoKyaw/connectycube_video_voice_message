@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:connectycube_sdk/connectycube_sdk.dart';
 import 'package:p2p_call_sample/src/utils/configs.dart' as config;
 import 'package:p2p_call_sample/src/chat/chatscreen.dart';
+import 'package:p2p_call_sample/src/chat/chatscreentwo.dart';
+import 'package:p2p_call_sample/src/chat/chatscreenthree.dart';
 import 'package:p2p_call_sample/src/call_screen.dart';
 
 class DrawerPage extends StatefulWidget {
@@ -18,7 +20,14 @@ class _DrawerState extends State<DrawerPage> {
 
   _renderWidget(int index, CubeUser user) {
     if (user.id == _selectOppoId) {
-      return ChatScreen(_cubeDialog, [user.id]);
+      switch (_selectedIndex) {
+        case 0:
+          return ChatScreen(_cubeDialog, [user.id]);
+        case 1:
+          return ChatScreenTwo(_cubeDialog, [user.id]);
+        case 2:
+          return ChatScreenThree(_cubeDialog, [user.id]);
+      }
     } else {
       return Center(
         child: Text("Please Select One Partner For Chat"),
