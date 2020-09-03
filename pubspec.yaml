@@ -12,6 +12,7 @@ dependencies:
 
   connectycube_sdk: ^0.3.0-beta1
   flutter_ringtone_player: ^2.0.0
+  vibration: ^1.4.0
 
 
 dev_dependencies:
@@ -21,3 +22,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/call.png
