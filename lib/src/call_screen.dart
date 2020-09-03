@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:connectycube_sdk/connectycube_sdk.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class IncomingCallScreen extends StatelessWidget {
   static const String TAG = "IncomingCallScreen";
@@ -10,8 +11,12 @@ class IncomingCallScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    FlutterRingtonePlayer.playRingtone();
+
     _callSession.onSessionClosed = (callSession) {
       log("_onSessionClosed", TAG);
+      FlutterRingtonePlayer.stop();
       Navigator.pop(context);
     };
 
@@ -85,6 +90,7 @@ class IncomingCallScreen extends StatelessWidget {
   }
 
   void _acceptCall(BuildContext context, P2PSession callSession) {
+    FlutterRingtonePlayer.stop();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -94,6 +100,7 @@ class IncomingCallScreen extends StatelessWidget {
   }
 
   void _rejectCall(BuildContext context, P2PSession callSession) {
+    FlutterRingtonePlayer.stop();
     callSession.reject();
   }
 

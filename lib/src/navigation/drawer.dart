@@ -200,7 +200,7 @@ class _DrawerState extends State<DrawerPage> {
 
   void _initCustomMediaConfigs() {
     RTCMediaConfig mediaConfig = RTCMediaConfig.instance;
-    mediaConfig.minHeight = 720;
+    mediaConfig.minHeight = 520;
     mediaConfig.minWidth = 1280;
     mediaConfig.minFrameRate = 30;
   }
